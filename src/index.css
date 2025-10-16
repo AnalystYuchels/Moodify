@@ -1,70 +1,62 @@
-@import "tailwindcss";
-
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  @apply bg-gradient-to-br from-background via-purple-900 to-black text-gray-100 min-h-screen font-casual;
 }
 
+/* HEADER */
+header {
+  @apply bg-gradient-to-r from-primary to-primary-dark shadow-soft sticky top-0 z-50;
+}
+
+nav a {
+  @apply text-gray-100 hover:text-accent transition-colors duration-300 text-lg font-medium;
+}
+
+/* MAIN LAYOUT */
+main {
+  @apply w-full max-w-5xl mx-auto p-6 flex flex-col items-center justify-center min-h-[80vh];
+}
+
+/* CONTAINER */
+.page-container {
+  @apply w-full bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl p-10 text-center mt-8;
+}
+
+/* HEADINGS */
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  @apply text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent mb-4;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+h2 {
+  @apply text-2xl font-semibold text-accent mb-2;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+p {
+  @apply text-gray-300 text-lg leading-relaxed mb-4;
+}
+
+/* BUTTONS */
+.btn {
+  @apply inline-block px-8 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-md;
+}
+
+.btn-primary {
+  @apply bg-gradient-to-r from-primary to-primary-dark text-white hover:from-accent hover:to-yellow-400 hover:text-black;
+}
+
+.btn-secondary {
+  @apply border border-accent text-accent hover:bg-accent hover:text-black;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  h1 {
+    @apply text-3xl;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+  p {
+    @apply text-base;
   }
 }

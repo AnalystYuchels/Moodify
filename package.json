@@ -12,12 +12,12 @@
   "dependencies": {
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.3"
+    "react-router-dom": "^7.9.3",
+    "recharts": "^3.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@tailwindcss/cli": "^4.1.14",
-    "@tailwindcss/postcss": "^4.1.14",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",
@@ -27,8 +27,9 @@
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.14",
-    "vite": "^7.1.7"
+    "tailwindcss": "^3.4.14",
+    "vite": "^7.1.7",
+    "vite-plugin-mkcert": "^1.17.9"
   },
   "description": "Moodify is a casual web app that helps you **log your mood** and instantly generates a **Spotify playlist** to match your vibe. Over time, it builds a **mood history** and shows trends so you can discover your personal soundtrack.",
   "main": "eslint.config.js",
