@@ -7,6 +7,7 @@ import Settings from "./pages/Settings";
 import Dashboard from "./pages/Dashboard";
 import Navbar from "./components/Navbar";
 import Callback from "./pages/Callback";
+import MoodPage from "./pages/MoodPage";
 import { ThemeProvider } from "./context/ThemeContext";
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/callback" element={<Callback />} />
+          <Route path="/mood" element={<MoodPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

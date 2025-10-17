@@ -3,6 +3,7 @@ import React, { useState } from "react";
 export default function MoodPicker({ onMoodSelect }) {
   const moods = [
     { name: "Happy", color: "bg-yellow-400" },
+    { name: "Angry", color: "bg-red-500"},
     { name: "Relaxed", color: "bg-blue-400" },
     { name: "Energetic", color: "bg-pink-500" },
     { name: "Focused", color: "bg-purple-500" },
