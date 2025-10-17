@@ -2,11 +2,22 @@ const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const REDIRECT_URI = import.meta.env.VITE_SPOTIFY_REDIRECT_URI || "https://steamy-cashed-luba.ngrok-free.dev/callback";
 const SCOPES = import.meta.env.VITE_SPOTIFY_SCOPES || "user-read-private user-read-email user-top-read playlist-read-private";
 
+if (!CLIENT_ID) {
+  console.error("🚨 Missing Spotify CLIENT_ID. Check your .env file or import.meta.env setup!");
+}
+
+if (!REDIRECT_URI) {
+  console.error("🚨 Missing Spotify REDIRECT_URI. Check your .env file!");
+}
+
 function base64UrlEncode(buffer) {
-  return btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+  let binary = "";
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
 async function sha256(plain) {
@@ -28,6 +39,14 @@ function generateRandomString(length = 128) {
 }
 
 export async function initiateAuth() {
+  // ✅ Safety check before doing anything
+  if (!CLIENT_ID || !REDIRECT_URI) {
+    alert("Spotify credentials missing. Please check your .env file.");
+    console.error("Missing environment variables:", { CLIENT_ID, REDIRECT_URI });
+    return; // stop the function here so it doesn't redirect
+  }
+
+  // ✅ Continue as normal
   const code_verifier = generateRandomString(96);
   sessionStorage.setItem("pkce_code_verifier", code_verifier);
 
@@ -44,10 +63,13 @@ export async function initiateAuth() {
   });
 
   const authUrl = `https://accounts.spotify.com/authorize?${params.toString()}`;
-
-  console.log("Redirecting to Spotify auth...");
-  console.log("CLIENT_ID:", CLIENT_ID);
-  console.log("Redirect URI:", REDIRECT_URI);
+  console.table({
+    CLIENT_ID,
+    REDIRECT_URI,
+    SCOPES,
+    "Code Verifier": code_verifier,
+    "Code Challenge": code_challenge,
+  });
   window.location.href = authUrl;
 }
 
@@ -167,3 +189,10 @@ export async function searchPlaylists(query) {
   if (!res.ok) throw new Error("Spotify playlist search failed.");
   return res.json();
 }
+
+export const getSpotifyAuthUrl = () => {
+  const scopeParam = encodeURIComponent(SCOPES.join(" "));
+  return `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(
+    REDIRECT_URI
+  )}&scope=${scopeParam}`;
+};

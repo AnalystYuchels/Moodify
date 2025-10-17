@@ -1,43 +1,110 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
-export default function Settings({ setFont }) {
-  const [selectedFont, setSelectedFont] = useState("Poppins, sans-serif");
+export default function Settings() {
+  const { theme, setTheme } = useContext(ThemeContext);
+  const [username, setUsername] = useState(localStorage.getItem("moodify_username") || "");
+  const [profilePic, setProfilePic] = useState(localStorage.getItem("moodify_profilePic") || "");
+  const [fontChoice, setFontChoice] = useState(localStorage.getItem("moodify_font") || "Poppins");
 
-  const handleFontChange = (e) => {
-    const newFont = e.target.value;
-    setSelectedFont(newFont);
-    setFont(newFont);
-  };
+  useEffect(() => {
+    localStorage.setItem("moodify_username", username);
+  }, [username]);
+
+  useEffect(() => {
+    if (profilePic) localStorage.setItem("moodify_profilePic", profilePic);
+  }, [profilePic]);
+
+  useEffect(() => {
+    localStorage.setItem("moodify_font", fontChoice);
+    document.body.style.fontFamily = `${fontChoice}, sans-serif`;
+  }, [fontChoice]);
+
+  function handleImageUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setProfilePic(ev.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
 
   return (
-    <div className="bg-white/10 backdrop-blur-md p-10 rounded-2xl shadow-xl w-full max-w-lg text-white">
-      <h2 className="text-3xl font-bold mb-6 text-yellow-300">
-        Customize Your Moodify Experience 🪄
-      </h2>
+    <div className={`app-bg ${theme === "dark" ? "bg-dark" : "bg-light"} flex items-center justify-center`}>
+      <div className="page-container max-w-lg">
+        <h2 className="h2">Account Settings</h2>
 
-      <div className="mb-6">
-        <label htmlFor="font" className="block mb-2 text-gray-200 font-medium">
-          Choose Your Font:
-        </label>
-        <select
-          id="font"
-          value={selectedFont}
-          onChange={handleFontChange}
-          className="w-full p-3 rounded-md bg-white/20 border border-yellow-300 text-white"
-        >
-          <option value="Poppins, sans-serif">Poppins</option>
-          <option value="Quicksand, sans-serif">Quicksand</option>
-          <option value="Nunito, sans-serif">Nunito</option>
-          <option value="Caveat, cursive">Caveat</option>
-          <option value="Pacifico, cursive">Pacifico</option>
-          <option value="Lato, sans-serif">Lato</option>
-        </select>
+        <div className="flex flex-col items-center mb-6">
+          <div className="avatar-placeholder mb-3">
+            {profilePic ? (
+              <img src={profilePic} alt="profile" className="w-full h-full object-cover rounded-full" />
+            ) : (
+              <span className="text-xl">🙂</span>
+            )}
+          </div>
+
+          <label className="text-sm text-accent cursor-pointer">
+            Upload Profile Picture
+            <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+          </label>
+        </div>
+
+        <div className="mb-4 text-left">
+          <label className="block mb-1 font-medium">Username</label>
+          <input
+            className="w-full p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white/70 dark:bg-gray-700/40"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Your display name"
+          />
+        </div>
+
+        <div className="mb-4 text-left">
+          <label className="block mb-1 font-medium">Theme</label>
+          <select
+            value={theme}
+            onChange={(e) => setTheme(e.target.value)}
+            className="w-full p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white/70 dark:bg-gray-700/40"
+          >
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </div>
+
+        <div className="mb-6 text-left">
+          <label className="block mb-1 font-medium">Font</label>
+          <select
+            value={fontChoice}
+            onChange={(e) => setFontChoice(e.target.value)}
+            className="w-full p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white/70 dark:bg-gray-700/40"
+          >
+            <option>Poppins</option>
+            <option>Quicksand</option>
+            <option>Nunito</option>
+            <option>Inter</option>
+          </select>
+        </div>
+
+        <div className="flex gap-4">
+          <button
+            onClick={() => alert("Settings saved")}
+            className="btn btn-primary"
+          >
+            Save Changes
+          </button>
+          <button
+            onClick={() => {
+              setUsername("");
+              setProfilePic("");
+              localStorage.removeItem("moodify_profilePic");
+            }}
+            className="btn btn-secondary"
+          >
+            Reset
+          </button>
+        </div>
       </div>
-
-      <p className="text-gray-200">
-        More customization options coming soon — change themes, set moods, and
-        personalize your music journey. 💫
-      </p>
     </div>
   );
 }

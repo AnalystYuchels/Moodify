@@ -1,16 +1,13 @@
-export default function PlaylistCard({ title = "Chill Vibes", description = "A playlist to match your current mood", href = "#" }) {
+import React from "react";
+
+export default function PlaylistCard({ title, description, onClick }) {
   return (
-    <div className="bg-white rounded-xl shadow p-4">
-      <div className="flex items-center gap-4">
-        <div className="w-16 h-16 bg-gradient-to-br from-primaryStart to-primaryEnd rounded-lg flex items-center justify-center text-white text-2xl">🎧</div>
-        <div>
-          <div className="font-semibold">{title}</div>
-          <div className="text-sm text-gray-600">{description}</div>
-        </div>
-        <div className="ml-auto">
-          <a href={href} className="text-blue-500 underline">Open</a>
-        </div>
-      </div>
+    <div
+      onClick={onClick}
+      className="cursor-pointer bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg rounded-2xl shadow-lg hover:shadow-glow hover:scale-[1.02] transition-all duration-300 p-6 text-center"
+    >
+      <h3 className="text-2xl font-semibold mb-2">{title}</h3>
+      <p className="text-accent">{description}</p>
     </div>
   );
 }

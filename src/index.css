@@ -2,32 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+/* === GLOBAL RESET === */
+html,
 body {
-  @apply bg-gradient-to-br from-background via-purple-900 to-black text-gray-100 min-h-screen font-casual;
+  @apply min-h-screen m-0 p-0 transition-colors duration-500 font-casual;
 }
 
-/* HEADER */
+/* === GRADIENT BACKGROUND === */
+body {
+  @apply bg-light-gradient dark:bg-dark-gradient text-gray-800 dark:text-gray-100;
+}
+
+/* === FIX: Ensure content sits above gradients === */
+#root {
+  @apply relative z-10 flex flex-col min-h-screen;
+}
+
+/* === HEADER === */
 header {
-  @apply bg-gradient-to-r from-primary to-primary-dark shadow-soft sticky top-0 z-50;
+  @apply bg-gradient-to-r from-primary via-purple-700 to-primary-dark shadow-md sticky top-0 z-50;
 }
 
 nav a {
   @apply text-gray-100 hover:text-accent transition-colors duration-300 text-lg font-medium;
 }
 
-/* MAIN LAYOUT */
+/* === MAIN LAYOUT === */
 main {
-  @apply w-full max-w-5xl mx-auto p-6 flex flex-col items-center justify-center min-h-[80vh];
+  @apply flex-1 flex flex-col items-center justify-center px-6 py-10;
 }
 
-/* CONTAINER */
+/* === PAGE CONTAINER === */
 .page-container {
-  @apply w-full bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl p-10 text-center mt-8;
+  @apply w-full max-w-4xl bg-white/10 dark:bg-gray-800/40 backdrop-blur-md rounded-3xl shadow-2xl p-10 text-center mt-10;
 }
 
-/* HEADINGS */
+/* === HEADINGS === */
 h1 {
-  @apply text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent mb-4;
+  @apply text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
 }
 
 h2 {
@@ -35,10 +47,10 @@ h2 {
 }
 
 p {
-  @apply text-gray-300 text-lg leading-relaxed mb-4;
+  @apply text-gray-200 dark:text-gray-300 text-lg leading-relaxed mb-4;
 }
 
-/* BUTTONS */
+/* === BUTTONS === */
 .btn {
   @apply inline-block px-8 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-md;
 }
@@ -51,7 +63,7 @@ p {
   @apply border border-accent text-accent hover:bg-accent hover:text-black;
 }
 
-/* RESPONSIVE */
+/* === RESPONSIVE === */
 @media (max-width: 768px) {
   h1 {
     @apply text-3xl;
@@ -60,3 +72,14 @@ p {
     @apply text-base;
   }
 }
+
+/* === SMOOTH ELEMENT HOVER === */
+.btn-glow {
+  @apply transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg;
+}
+
+html, body {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+

@@ -1,42 +1,34 @@
 import React from "react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-
-function mapMoodToValue(m) {
-  switch (m) {
-    case "happy": return 4;
-    case "chill": return 3;
-    case "neutral": return 2;
-    case "sad": return 1;
-    case "angry": return 0;
-    default: return 2;
-  }
-}
+import { useNavigate } from "react-router-dom";
 
 export default function Trends() {
-  const raw = localStorage.getItem("mood_logs");
-  const logs = raw ? JSON.parse(raw) : [];
-  const data = logs.slice().reverse().map((l, idx) => ({
-    name: new Date(l.date).toLocaleDateString(),
-    value: mapMoodToValue(l.mood)
-  })).slice(-20); // last 20 records
+  const navigate = useNavigate();
+
+  const trends = [
+    { id: 1, title: "Feel-Good Beats", mood: "Happy" },
+    { id: 2, title: "Calm & Cozy", mood: "Relaxed" },
+    { id: 3, title: "Deep Focus", mood: "Productive" },
+  ];
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold mb-4">📈 Your Mood Journey</h2>
-
-      <div className="bg-white rounded-xl shadow p-4">
-        {data.length === 0 ? (
-          <div className="text-gray-500">No mood logs yet — log a mood from the Dashboard to see trends.</div>
-        ) : (
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data}>
-              <XAxis dataKey="name" />
-              <YAxis domain={[0,4]} ticks={[0,1,2,3,4]} />
-              <Tooltip />
-              <Line type="monotone" dataKey="value" stroke="#8A5CF6" strokeWidth={3} dot={{ r: 4 }} />
-            </LineChart>
-          </ResponsiveContainer>
-        )}
+    <div className="min-h-screen flex flex-col items-center justify-start pt-24 bg-light-gradient dark:bg-dark-gradient transition-all duration-500 px-4">
+      <div className="max-w-5xl w-full mx-auto my-12">
+        <h2 className="text-4xl font-extrabold mb-6">Trending Moods 🔥</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {trends.map((t) => (
+            <article
+              key={t.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => navigate(`/trends/${t.id}`)}
+              onKeyDown={(e) => { if (e.key === "Enter") navigate(`/trends/${t.id}`); }}
+              className="cursor-pointer bg-white/20 dark:bg-gray-800/30 backdrop-blur-lg rounded-2xl shadow-lg hover:shadow-glow hover:scale-[1.02] transition-all duration-300 p-6 text-center"
+            >
+              <h3 className="text-2xl font-semibold mb-2">{t.title}</h3>
+              <p className="text-accent">{t.mood}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   );

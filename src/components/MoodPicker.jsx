@@ -1,30 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 
-const moods = [
-  { key: "happy", label: "😁", name: "Happy" },
-  { key: "chill", label: "🙂", name: "Chill" },
-  { key: "neutral", label: "😐", name: "Neutral" },
-  { key: "sad", label: "😔", name: "Sad" },
-  { key: "angry", label: "😠", name: "Angry" },
-];
+export default function MoodPicker({ onMoodSelect }) {
+  const moods = [
+    { name: "Happy", color: "bg-yellow-400" },
+    { name: "Relaxed", color: "bg-blue-400" },
+    { name: "Energetic", color: "bg-pink-500" },
+    { name: "Focused", color: "bg-purple-500" },
+  ];
 
-export default function MoodPicker({ value, onChange }) {
+  const [selected, setSelected] = useState(null);
+
+  const handleSelect = (mood) => {
+    setSelected(mood.name);
+    onMoodSelect?.(mood.name);
+  };
+
   return (
-    <div>
-      <div className="flex gap-4">
-        {moods.map((m) => (
-          <button
-            key={m.key}
-            onClick={() => onChange(m.key)}
-            className={`text-4xl p-3 rounded-xl transition transform ${
-              value === m.key ? "scale-110 ring-4 ring-primaryStart" : "hover:scale-105"
-            }`}
-            title={m.name}
-          >
-            {m.label}
-          </button>
-        ))}
-      </div>
+    <div className="flex flex-wrap justify-center gap-4 mt-8">
+      {moods.map((mood) => (
+        <button
+          key={mood.name}
+          onClick={() => handleSelect(mood)}
+          className={`px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 shadow-md hover:shadow-lg ${mood.color} ${
+            selected === mood.name
+              ? "ring-4 ring-accent ring-offset-2 scale-105"
+              : "opacity-90 hover:opacity-100"
+          }`}
+        >
+          {mood.name}
+        </button>
+      ))}
     </div>
   );
 }
