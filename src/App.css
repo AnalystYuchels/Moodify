@@ -4,9 +4,9 @@ html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  color: #f8f8ff;
+  color: #e6e6f3;
   background: linear-gradient(135deg, #3b1e75 0%, #5c31c0 40%, #f7c948 100%);
-  background-size: 400% 400%;
+  background-size: 200% 200%;
   animation: gradientShift 12s ease infinite;
   font-family: "Poppins", sans-serif;
 }

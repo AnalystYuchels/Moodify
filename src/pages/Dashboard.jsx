@@ -14,7 +14,7 @@ export default function Dashboard() {
         <h1 className="text-4xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
           Your Dashboard 🎶
         </h1>
-        <p className="text-lg text-gray-300 dark:text-gray-200 leading-relaxed">
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
           Welcome back! Here’s where your moods, playlists, and musical inspirations come together.
         </p>
       </div>
