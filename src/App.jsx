@@ -6,6 +6,7 @@ import TrendDetail from "./pages/TrendDetail";
 import Settings from "./pages/Settings";
 import Dashboard from "./pages/Dashboard";
 import Navbar from "./components/Navbar";
+import Callback from "./pages/Callback";
 import { ThemeProvider } from "./context/ThemeContext";
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/trends/:id" element={<TrendDetail />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/callback" element={<Callback />} />
         </Routes>
       </Router>
     </ThemeProvider>

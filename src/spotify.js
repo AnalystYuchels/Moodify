@@ -1,22 +1,32 @@
 const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const REDIRECT_URI = import.meta.env.VITE_SPOTIFY_REDIRECT_URI || "https://steamy-cashed-luba.ngrok-free.dev/callback";
-const SCOPES = import.meta.env.VITE_SPOTIFY_SCOPES || "user-read-private user-read-email user-top-read playlist-read-private";
+const REDIRECT_URI =
+  import.meta.env.VITE_SPOTIFY_REDIRECT_URI ||
+  "https://moodify-lake-one.vercel.app/callback";
+
+// Ensure scopes are always a space-separated string
+const SCOPES =
+  (import.meta.env.VITE_SPOTIFY_SCOPES &&
+    import.meta.env.VITE_SPOTIFY_SCOPES.split(",").join(" ")) ||
+  "user-read-private user-read-email user-top-read playlist-read-private";
 
 if (!CLIENT_ID) {
   console.error("🚨 Missing Spotify CLIENT_ID. Check your .env file or import.meta.env setup!");
 }
-
 if (!REDIRECT_URI) {
-  console.error("🚨 Missing Spotify REDIRECT_URI. Check your .env file!");
+  console.error("🚨 Missing Spotify_REDIRECT_URI. Check your .env file!");
 }
+
+console.log("✅ CLIENT_ID:", CLIENT_ID);
+console.log("✅ REDIRECT_URI:", REDIRECT_URI);
+console.log("✅ SCOPES:", SCOPES);
+
+// --- Utility Functions ---
 
 function base64UrlEncode(buffer) {
   let binary = "";
   const bytes = new Uint8Array(buffer);
   const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
+  for (let i = 0; i < len; i++) binary += String.fromCharCode(bytes[i]);
   return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
@@ -38,15 +48,15 @@ function generateRandomString(length = 128) {
   return result;
 }
 
+// --- Main Authentication ---
+
 export async function initiateAuth() {
-  // ✅ Safety check before doing anything
   if (!CLIENT_ID || !REDIRECT_URI) {
     alert("Spotify credentials missing. Please check your .env file.");
     console.error("Missing environment variables:", { CLIENT_ID, REDIRECT_URI });
-    return; // stop the function here so it doesn't redirect
+    return;
   }
 
-  // ✅ Continue as normal
   const code_verifier = generateRandomString(96);
   sessionStorage.setItem("pkce_code_verifier", code_verifier);
 
@@ -63,13 +73,17 @@ export async function initiateAuth() {
   });
 
   const authUrl = `https://accounts.spotify.com/authorize?${params.toString()}`;
+
   console.table({
     CLIENT_ID,
     REDIRECT_URI,
     SCOPES,
     "Code Verifier": code_verifier,
     "Code Challenge": code_challenge,
+    "Auth URL": authUrl,
   });
+
+  // Redirect to Spotify login
   window.location.href = authUrl;
 }
 
@@ -106,6 +120,8 @@ export async function exchangeCodeForToken(code) {
   return data;
 }
 
+// --- Token Management ---
+
 export function getStoredAccessToken() {
   const token = localStorage.getItem("spotify_access_token");
   const expiresAt = localStorage.getItem("spotify_token_expires_at");
@@ -131,7 +147,7 @@ export async function refreshAccessToken() {
   });
 
   if (!res.ok) {
-    console.warn("Token refresh failed");
+    console.warn("⚠️ Token refresh failed");
     return null;
   }
 
@@ -157,6 +173,8 @@ export async function ensureValidToken() {
   return token;
 }
 
+// --- API Functions ---
+
 export async function getRecommendationsByMood(moodKey) {
   const token = await ensureValidToken();
   if (!token) throw new Error("Not authenticated with Spotify.");
@@ -170,7 +188,9 @@ export async function getRecommendationsByMood(moodKey) {
   };
 
   const seed_genres = moodToGenres[moodKey] || "pop";
-  const url = `https://api.spotify.com/v1/recommendations?seed_genres=${encodeURIComponent(seed_genres)}&limit=10`;
+  const url = `https://api.spotify.com/v1/recommendations?seed_genres=${encodeURIComponent(
+    seed_genres
+  )}&limit=10`;
 
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
@@ -191,8 +211,14 @@ export async function searchPlaylists(query) {
 }
 
 export const getSpotifyAuthUrl = () => {
-  const scopeParam = encodeURIComponent(SCOPES.join(" "));
+  const scopeParam = encodeURIComponent(SCOPES);
   return `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(
     REDIRECT_URI
   )}&scope=${scopeParam}`;
 };
+
+if (typeof window !== "undefined") {
+  console.log("✅ SPOTIFY ENV CHECK:");
+  console.log("CLIENT ID:", CLIENT_ID);
+  console.log("REDIRECT URI:", REDIRECT_URI);
+}
